@@ -1,29 +1,32 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Signin from "../components/Signin.vue";
+import Login from "../components/Login.vue";
+import MisPronosticos from "../components/MisPronosticos.vue";
+import MisQuinelas from "../components/MisQuinelas.vue";
+import CrearQuinela from "../components/CrearQuinela.vue";
+import Quinela from "../components/Quinela.vue";
+import Survival from "../components/Survival.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-  const routes = [
+const routes = [
+  { path: "/", component: Signin },
+  { path: "/login", component: Login },
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/pronosticos",
+    component: MisPronosticos,
   },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+  { path: "/quinelas", component: MisQuinelas },
+  { path: "/nueva_quinela", component: CrearQuinela },
+  { path: "/nombre_quinela", component: Quinela },
+  { path: "/survival", component: Survival },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

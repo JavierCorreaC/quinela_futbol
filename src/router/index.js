@@ -17,7 +17,7 @@ const routes = [
     path: "/pronosticos",
     component: MisPronosticos,
   },
-  { path: "/quinelas", component: MisQuinelas },
+  { path: "/quinelas", name:'quinielas', component: MisQuinelas },
   { path: "/nueva_quinela", component: CrearQuinela },
   { path: "/nombre_quinela", component: Quinela },
   { path: "/survival", component: Survival },

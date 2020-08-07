@@ -2,7 +2,7 @@
   <v-app id="backGND">
     <v-card color="rgba(255, 255, 255, 0.75)">
       <v-toolbar color="rgba(255, 255, 255, 0)" dense>
-        <v-toolbar-title>Futbol Quinela</v-toolbar-title>
+        <v-toolbar-title>Futbol Quiniela</v-toolbar-title>
         <v-spacer></v-spacer>
 
         <router-link to="/" style="text-decoration: none; color: inherit;">
@@ -22,21 +22,23 @@
             <v-form style="font-weight: bold;">
               <v-container>
                 <v-text-field
+                  v-model="email"
                   type="email"
                   color="success"
                   label="Correo electrónico"
                   prepend-icon="mdi-email"
                 ></v-text-field>
                 <v-text-field
+                  v-model="password"
                   type="password"
                   color="success"
                   label="Contraseña"
                   prepend-icon="mdi-lock"
                 ></v-text-field>
 
-                <router-link to="/quinelas" style="text-decoration: none; color: inherit;">
-                  <v-btn color="success">empieza a jugar</v-btn>
-                </router-link>
+                
+                  <v-btn @click="login" color="success">empieza a jugar</v-btn>
+              
 
                 <br />
                 <br />
@@ -61,12 +63,24 @@
 </template>
 
 <script>
+import firebase from 'firebase';
+
 export default {
   name: "login",
   data() {
-    return {};
+    return {
+      email: '',
+      password: ''
+    };
   },
-  methods: {},
+  methods: {
+    login(){
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
+        this.$router.push('/quinelas').catch(err => {console.log(err)});
+
+      }).catch((error) => {console.log(error)})
+    }
+  },
 };
 </script>
 

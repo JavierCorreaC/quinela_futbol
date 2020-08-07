@@ -21,19 +21,21 @@
             <h2>Regístrate Aquí</h2>
             <v-form style="font-weight: bold;">
               <v-container>
-                <v-text-field dense color="success" label="Nombre completo"></v-text-field>
-                <v-text-field dense type="email" color="success" label="Correo electrónico"></v-text-field>
-                <v-text-field dense type="text" color="success" label="Confirma tu correo"></v-text-field>
-                <v-text-field dense type="password" color="success" label="Contraseña"></v-text-field>
-                <v-text-field dense type="password" color="success" label="Confirma tu contraseña"></v-text-field>
-                <v-text-field dense type="date" color="success" label="Fecha de nacimiento"></v-text-field>
+                <v-text-field v-model="fullName" dense color="success" label="Nombre completo"></v-text-field>
+                <v-text-field v-model="email" dense type="email" color="success" label="Correo electrónico"></v-text-field>
+                <v-text-field  dense type="text" color="success" label="Confirma tu correo"></v-text-field>
+                <v-text-field v-model="password" dense type="password" color="success" label="Contraseña"></v-text-field>
+                <v-text-field v-model="password_confirm" dense type="password" color="success" label="Confirma tu contraseña"></v-text-field>
+                <v-text-field v-model="bornDate" dense type="date" color="success" label="Fecha de nacimiento"></v-text-field>
                 <v-select dense color="success" :items="sexItems" label="Sexo"></v-select>
                 <v-select dense color="success" :items="EdoItems" label="Estado de la república"></v-select>
                 <v-select dense color="success" label="¿Cómo te enteraste de nosotros?"></v-select>
 
-                <router-link to="/quinelas" style="text-decoration: none; color: inherit;">
-                  <v-btn color="success">registrarse</v-btn>
-                </router-link>
+                
+                   <v-btn @click="registerEmail"  color="blue-grey lighten-1" dark>
+                      ACEPTAR
+                    </v-btn>
+                
               </v-container>
             </v-form>
           </v-card>
@@ -44,10 +46,19 @@
 </template>
 
 <script>
+import firebase from 'firebase';
+import *  as faker from 'faker';
+import {db} from '@/main';
 export default {
   name: "signin",
-  data() {
+  data() {   
     return {
+      email:'',
+      fullName: '',
+      password: '',
+      password_confirm: '',
+      bornDate: '',
+      howKnow: '',
       sexItems: ["Hombre", "Mujer", "Otro"],
       EdoItems: [
         "Aguascalientes",
@@ -85,7 +96,31 @@ export default {
       ],
     };
   },
-};
+  methods: {
+    registerEmail () {        
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((result) => {
+            const data = {
+              tokenKey: faker.random.alphaNumeric(16),
+              uid: result.user.uid,
+              email: this.email,
+              password: this.password,
+              bornDate: this.bornDate       
+            };
+            db.collection('users').doc(data.uid).onSnapshot(snapshot => {
+                if (snapshot.exists == false) {                    
+                db.collection('users').doc(result.user.uid).set(data).then(() => {               
+                this.$router.push('/quinelas').catch(err => {console.log(err)});
+              })
+              } else {
+                this.$router.push('/').catch(err => {console.log(err)});               
+              }                 
+            })  
+        }).catch((error) => {console.log(error)})
+    }
+  }
+}
+    
+
 </script>
 
 <style>
